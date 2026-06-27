@@ -1,0 +1,14 @@
+# Raylib game - Silly Fishing
+
+A small game about fishing made for educational and entertaining purposes.
+
+### Dependencies:  
+Python 3.14.5
+```
+Package   Version
+--------- -------
+cffi      2.0.0
+pip       26.1.2
+pycparser 3.0
+raylib    6.0.1.0
+```
