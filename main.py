@@ -1,4 +1,5 @@
 from pyray import *
+from player import Player
 
 def main() -> None:
     # The virtual resolution
@@ -12,6 +13,8 @@ def main() -> None:
 
     target: RenderTexture = load_render_texture(virtual_width, virtual_height)
     set_texture_filter(target.texture, TextureFilter.TEXTURE_FILTER_POINT)
+
+    player: Player = Player()
 
     while not window_should_close():
         # Calculate how much the resolution scale has to change to fit the 16:9 resolution
@@ -28,21 +31,12 @@ def main() -> None:
         offset_x: float = (get_screen_width() - draw_width) / 2
         offset_y: float = (get_screen_height() - draw_height) / 2
 
-        # Draw your game here
         begin_texture_mode(target)
 
         # Background color
         clear_background(RAYWHITE)
 
-        # Text
-        header_text: str = "Hello, World!"
-        draw_text(
-            header_text,
-            (virtual_width - measure_text(header_text, 5)) // 2,
-            50,
-            5,
-            BLACK
-        )
+        player.move()
 
         end_texture_mode()
 
