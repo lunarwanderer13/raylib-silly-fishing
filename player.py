@@ -20,6 +20,9 @@ class Player:
         draw_rectangle_v(self.position, Vector2(20, 20), BLUE)
 
     def move(self) -> None:
+        if not self.can_move:
+            return
+
         delta: float = get_frame_time()
 
         if is_key_down(DefaultConfig.keybinds["walk_up"]):
