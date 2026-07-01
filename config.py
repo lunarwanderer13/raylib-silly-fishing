@@ -1,0 +1,15 @@
+from pyray import *
+
+class DefaultConfig:
+    keybinds: dict[str, KeyboardKey] = {
+        "walk_up": KeyboardKey.KEY_W,
+        "walk_right": KeyboardKey.KEY_D,
+        "walk_down": KeyboardKey.KEY_S,
+        "walk_left": KeyboardKey.KEY_A,
+        "sprint": KeyboardKey.KEY_LEFT_SHIFT,
+        "use_rod": KeyboardKey.KEY_SPACE,
+        "use_bait": KeyboardKey.KEY_LEFT_CONTROL,
+    }
+
+    fps: int = 60
+    fullscreen: bool = False
