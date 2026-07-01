@@ -54,7 +54,7 @@ class Tool(Item):
 
     def __init__(self, item_id: int, item_name: str, item_description: str, item_tier: int, item_properties: dict[str, str] | None = None) -> None:
         self.item_tier: str = self.tool_tiers[item_tier - 1]
-        super().__init__(item_id, f"{self.item_tier} {item_name}", item_description, self.item_rarities[item_tier], item_properties or {})
+        super().__init__(item_id, f"{self.item_tier} {item_name}", item_description, self.item_rarities[item_tier - 1], item_properties or {})
 
     def use(self) -> None:
         print(f"Used {self.item_name}")
@@ -241,3 +241,18 @@ item_index: list[Item] = [
              "unsellable": "Unsellable",
          }),
 ]
+
+class ItemManager:
+    items: list[Item] = []
+
+    def add_item(self, item_id: int) -> Item:
+        item: Item = next(item for item in item_index if item.item_id == item_id)
+        self.items.append(item)
+        self.items.sort(key = lambda i: i.item_id)
+        return item
+
+    def remove_item(self, item_id: int) -> Item:
+        item: Item = next(item for item in self.items if item.item_id == item_id)
+        index: int = next(index for index, item in enumerate(self.items) if item.item_id == item_id)
+        self.items.pop(index)
+        return item
