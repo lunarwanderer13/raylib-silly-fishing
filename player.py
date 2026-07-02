@@ -16,6 +16,10 @@ class Player:
     can_move: bool = False
     can_interact: bool = False
 
+    def toggle_debug_mode(self) -> None:
+        if is_key_pressed(DefaultConfig.keybinds["toggle_debug_mode"]):
+            self.debug = not self.debug
+
     def move(self) -> None:
         delta: float = get_frame_time()
 

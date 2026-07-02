@@ -9,6 +9,8 @@ class DefaultConfig:
         "sprint": KeyboardKey.KEY_LEFT_SHIFT,
         "use_rod": KeyboardKey.KEY_SPACE,
         "use_bait": KeyboardKey.KEY_LEFT_CONTROL,
+        "toggle_debug_mode": KeyboardKey.KEY_TAB,
+        "toggle_command_line": KeyboardKey.KEY_GRAVE
     }
 
     fps: int = 60
