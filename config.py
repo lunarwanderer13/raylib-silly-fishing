@@ -1,5 +1,8 @@
 from pyray import *
 
+class GameConfig:
+    virtual_resolution: Vector2 = Vector2(320, 180)
+
 class DefaultConfig:
     keybinds: dict[str, KeyboardKey] = {
         "walk_up": KeyboardKey.KEY_W,

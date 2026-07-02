@@ -1,10 +1,11 @@
 from pyray import *
 from player import Player
+from config import GameConfig
 
 def main() -> None:
     # The virtual resolution
-    virtual_width: int = 320
-    virtual_height: int = 180
+    virtual_width: int = int(GameConfig.virtual_resolution.x)
+    virtual_height: int = int(GameConfig.virtual_resolution.y)
 
     init_window(virtual_width * 3, virtual_height * 3, "Silly Fishing")
     set_window_state(ConfigFlags.FLAG_WINDOW_RESIZABLE)
