@@ -36,7 +36,7 @@ def main() -> None:
         # Background color
         clear_background(RAYWHITE)
 
-        player.move()
+        player.update()
 
         end_texture_mode()
 
