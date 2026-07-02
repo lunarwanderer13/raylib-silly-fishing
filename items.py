@@ -1,7 +1,9 @@
 from pyray import Color
 
 class ItemRarity:
-    def __init__(self, name: str, color: Color) -> None:
+    def __init__(self,
+                 name: str,
+                 color: Color) -> None:
         self.name: str = name
         self.color: Color = color
 
@@ -28,7 +30,12 @@ class Item:
         ItemRarity("Godly", item_colors[7]),
     ]
 
-    def __init__(self, item_id: int, item_name: str, item_description: str, item_rarity: ItemRarity | str, item_properties: dict[str, str] | None = None) -> None:
+    def __init__(self,
+                 item_id: int,
+                 item_name: str,
+                 item_description: str,
+                 item_rarity: ItemRarity | str,
+                 item_properties: dict[str, str] | None = None) -> None:
         self.item_id: int = item_id
         self.item_name: str = item_name
         self.item_description: str = item_description
@@ -37,7 +44,10 @@ class Item:
         if isinstance(item_rarity, ItemRarity):
             self.item_rarity: ItemRarity = item_rarity
         else:
-            self.item_rarity: ItemRarity = next((v for v in self.item_rarities if v.name == item_rarity), self.item_rarities[0])
+            self.item_rarity: ItemRarity = next(
+                (v for v in self.item_rarities if v.name == item_rarity),
+                self.item_rarities[0]
+            )
 
 class Tool(Item):
     item_type: str = "tool"
@@ -52,9 +62,18 @@ class Tool(Item):
         "Elder's",
     ]
 
-    def __init__(self, item_id: int, item_name: str, item_description: str, item_tier: int, item_properties: dict[str, str] | None = None) -> None:
+    def __init__(self,
+                 item_id: int,
+                 item_name: str,
+                 item_description: str,
+                 item_tier: int,
+                 item_properties: dict[str, str] | None = None) -> None:
         self.item_tier: str = self.tool_tiers[item_tier - 1]
-        super().__init__(item_id, f"{self.item_tier} {item_name}", item_description, self.item_rarities[item_tier - 1], item_properties or {})
+        super().__init__(item_id,
+                         f"{self.item_tier} {item_name}",
+                         item_description,
+                         self.item_rarities[item_tier - 1],
+                         item_properties or {})
 
     def use(self) -> None:
         print(f"Used {self.item_name}")
@@ -62,8 +81,16 @@ class Tool(Item):
 class Rod(Tool):
     item_type: str = "rod"
 
-    def __init__(self, item_id: int, item_description: str, item_tier: int, item_properties: dict[str, str] | None = None) -> None:
-        super().__init__(item_id, self.item_type.capitalize(), item_description, item_tier, item_properties or {})
+    def __init__(self,
+                 item_id: int,
+                 item_description: str,
+                 item_tier: int,
+                 item_properties: dict[str, str] | None = None) -> None:
+        super().__init__(item_id,
+                         self.item_type.capitalize(),
+                         item_description,
+                         item_tier,
+                         item_properties or {})
 
     def use(self) -> None:
         pass
@@ -71,8 +98,16 @@ class Rod(Tool):
 class Bait(Tool):
     item_type: str = "bait"
 
-    def __init__(self, item_id: int, item_description: str, item_tier: int, item_properties: dict[str, str] | None = None) -> None:
-        super().__init__(item_id, self.item_type.capitalize(), item_description, item_tier, item_properties or {})
+    def __init__(self,
+                 item_id: int,
+                 item_description: str,
+                 item_tier: int,
+                 item_properties: dict[str, str] | None = None) -> None:
+        super().__init__(item_id,
+                         self.item_type.capitalize(),
+                         item_description,
+                         item_tier,
+                         item_properties or {})
 
     def use(self) -> None:
         pass
@@ -245,13 +280,15 @@ item_index: list[Item] = [
 class ItemManager:
     items: list[Item] = []
 
-    def add_item(self, item_id: int) -> Item:
+    def add_item(self,
+                 item_id: int) -> Item:
         item: Item = next(item for item in item_index if item.item_id == item_id)
         self.items.append(item)
         self.items.sort(key = lambda i: i.item_id)
         return item
 
-    def remove_item(self, item_id: int) -> Item:
+    def remove_item(self,
+                    item_id: int) -> Item:
         item: Item = next(item for item in self.items if item.item_id == item_id)
         index: int = next(index for index, item in enumerate(self.items) if item.item_id == item_id)
         self.items.pop(index)
