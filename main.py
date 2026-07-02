@@ -1,6 +1,7 @@
 from pyray import *
 from player import Player
 from config import GameConfig
+from data import SaveManager
 
 def main() -> None:
     # The virtual resolution
@@ -15,7 +16,9 @@ def main() -> None:
     target: RenderTexture = load_render_texture(virtual_width, virtual_height)
     set_texture_filter(target.texture, TextureFilter.TEXTURE_FILTER_POINT)
 
-    player: Player = Player()
+    save_manager: SaveManager = SaveManager("data.json")
+    data: dict[str, object] = save_manager.load()
+    player: Player = Player(data)
 
     while not window_should_close():
         # Calculate how much the resolution scale has to change to fit the 16:9 resolution

@@ -1,8 +1,10 @@
 from pyray import *
-from config import DefaultConfig
 from items import ItemManager
 
 class Player:
+    def __init__(self, data) -> None:
+        self.data = data
+
     inventory: ItemManager = ItemManager()
 
     position: Vector2 = Vector2(50, 50)
@@ -17,24 +19,24 @@ class Player:
     can_interact: bool = False
 
     def toggle_debug_mode(self) -> None:
-        if is_key_pressed(DefaultConfig.keybinds["toggle_debug_mode"]):
+        if is_key_pressed(self.data["keybinds"]["toggle_debug_mode"]):
             self.debug = not self.debug
 
     def move(self) -> None:
         delta: float = get_frame_time()
 
-        if is_key_down(DefaultConfig.keybinds["walk_up"]):
+        if is_key_down(self.data["keybinds"]["walk_up"]):
             self.movement.y = -1
-        if is_key_down(DefaultConfig.keybinds["walk_right"]):
+        if is_key_down(self.data["keybinds"]["walk_right"]):
             self.movement.x = 1
-        if is_key_down(DefaultConfig.keybinds["walk_down"]):
+        if is_key_down(self.data["keybinds"]["walk_down"]):
             self.movement.y = 1
-        if is_key_down(DefaultConfig.keybinds["walk_left"]):
+        if is_key_down(self.data["keybinds"]["walk_left"]):
             self.movement.x = -1
 
-        if is_key_up(DefaultConfig.keybinds["walk_up"]) and is_key_up(DefaultConfig.keybinds["walk_down"]):
+        if is_key_up(self.data["keybinds"]["walk_up"]) and is_key_up(self.data["keybinds"]["walk_down"]):
             self.movement.y = 0
-        if is_key_up(DefaultConfig.keybinds["walk_left"]) and is_key_up(DefaultConfig.keybinds["walk_right"]):
+        if is_key_up(self.data["keybinds"]["walk_left"]) and is_key_up(self.data["keybinds"]["walk_right"]):
             self.movement.x = 0
 
         length: float = vector2_length_sqr(self.movement)
@@ -43,7 +45,7 @@ class Player:
             self.movement.x /= length
             self.movement.y /= length
 
-        if is_key_down(DefaultConfig.keybinds["sprint"]):
+        if is_key_down(self.data["keybinds"]["sprint"]):
             self.sprint = 1.25
         else:
             self.sprint = 1.0
