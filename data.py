@@ -20,6 +20,7 @@ class SaveManager:
             "keybinds": DefaultConfig.keybinds,
             "fps": DefaultConfig.fps,
             "fullscreen": DefaultConfig.fullscreen,
+            "room_id": DefaultConfig.room_id,
         }
 
         with open(self.path, "w") as file:
