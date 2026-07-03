@@ -6,8 +6,7 @@ class Player:
     def __init__(self, data) -> None:
         self.data = data
 
-        self.debugger: Debugger = Debugger(self.data["keybinds"]["toggle_debug_overlay"],
-                                      self.data["keybinds"]["toggle_command_line"])
+        self.debugger: Debugger = Debugger(self)
 
         self.inventory: ItemManager = ItemManager()
 
@@ -16,10 +15,10 @@ class Player:
     speed: float = 100
     sprint: float = 1.0
 
-    can_cast: bool = False
-    can_reel: bool = False
-    can_move: bool = False
-    can_interact: bool = False
+    can_cast: bool = True
+    can_reel: bool = True
+    can_move: bool = True
+    can_interact: bool = True
 
     def move(self) -> None:
         delta: float = get_frame_time()
@@ -58,11 +57,12 @@ class Player:
         self.position.y += self.movement.y * self.speed * self.sprint * delta
 
     def draw(self) -> None:
-        draw_rectangle_v(self.position, Vector2(20, 20), BLUE)
+        draw_rectangle_v(self.position, Vector2(10, 10), BLUE)
 
     def update(self) -> None:
-        if self.can_move: self.move()
         self.draw()
 
-        self.debugger.debug_overlay(self)
+        self.debugger.debug_overlay()
         self.debugger.command_line()
+
+        if self.can_move: self.move()
