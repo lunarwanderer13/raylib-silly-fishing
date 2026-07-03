@@ -1,4 +1,6 @@
 from pyray import *
+from typing import Any
+
 from player import Player
 from config import GameConfig
 from data import SaveManager
@@ -17,7 +19,7 @@ def main() -> None:
     set_texture_filter(target.texture, TextureFilter.TEXTURE_FILTER_POINT)
 
     save_manager: SaveManager = SaveManager("data.json")
-    data: dict[str, object] = save_manager.load()
+    data: dict[str, Any] = save_manager.load()
     player: Player = Player(data)
 
     while not window_should_close():
