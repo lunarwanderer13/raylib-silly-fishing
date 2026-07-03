@@ -34,6 +34,11 @@ class Player:
         if is_key_down(self.data["keybinds"]["walk_left"]):
             self.movement.x = -1
 
+        if is_key_down(self.data["keybinds"]["walk_up"]) and is_key_down(self.data["keybinds"]["walk_down"]):
+            self.movement.y = 0
+        if is_key_down(self.data["keybinds"]["walk_left"]) and is_key_down(self.data["keybinds"]["walk_right"]):
+            self.movement.x = 0
+
         if is_key_up(self.data["keybinds"]["walk_up"]) and is_key_up(self.data["keybinds"]["walk_down"]):
             self.movement.y = 0
         if is_key_up(self.data["keybinds"]["walk_left"]) and is_key_up(self.data["keybinds"]["walk_right"]):
