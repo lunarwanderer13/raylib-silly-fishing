@@ -18,4 +18,4 @@ class DefaultConfig:
 
     fps: int = 60
     fullscreen: bool = False
-    room_id: int = 0
+    room_id: int = 5

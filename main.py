@@ -4,6 +4,7 @@ from typing import Any
 from player import Player
 from config import GameConfig
 from data import SaveManager
+from rooms.rooms import RoomManager, RoomIndex
 
 def main() -> None:
     save_manager: SaveManager = SaveManager("data.json")
@@ -16,6 +17,8 @@ def main() -> None:
 
     init_window(virtual_width * 3, virtual_height * 3, "Silly Fishing")
     set_window_state(ConfigFlags.FLAG_WINDOW_RESIZABLE)
+
+    room_manager: RoomManager = RoomManager(RoomIndex(data["room_id"]))
 
     if ((data["fullscreen"] and not is_window_state(ConfigFlags.FLAG_BORDERLESS_WINDOWED_MODE))
             or (not data["fullscreen"] and is_window_state(ConfigFlags.FLAG_BORDERLESS_WINDOWED_MODE))):
@@ -45,6 +48,8 @@ def main() -> None:
 
         # Background color
         clear_background(RAYWHITE)
+
+        room_manager.load_room(RoomIndex(data["room_id"]))
 
         player.update()
 

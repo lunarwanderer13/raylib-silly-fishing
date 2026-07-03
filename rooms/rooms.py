@@ -1,13 +1,13 @@
 from enum import Enum
 
-from town_entrance import draw_room as draw_town_entrance
-from road import draw_room as draw_road
-from town import draw_room as draw_town
-from house import draw_room as draw_house
-from fisherman import draw_room as draw_fisherman
-from lake import draw_room as draw_lake
-from river import draw_room as draw_river
-from sea import draw_room as draw_sea
+from .town_entrance import draw_room as draw_town_entrance
+from .road import draw_room as draw_road
+from .town import draw_room as draw_town
+from .house import draw_room as draw_house
+from .fisherman import draw_room as draw_fisherman
+from .lake import draw_room as draw_lake
+from .river import draw_room as draw_river
+from .sea import draw_room as draw_sea
 
 class RoomIndex(Enum):
     TOWN_ENTRANCE = 0
@@ -20,9 +20,12 @@ class RoomIndex(Enum):
     SEA = 7
 
 class RoomManager:
-    current_room: RoomIndex = RoomIndex.TOWN_ENTRANCE
+    def __init__(self, current_room: RoomIndex = RoomIndex.TOWN_ENTRANCE) -> None:
+        self.current_room: RoomIndex = current_room
 
-    def load_room(self, room_id: RoomIndex) -> None:
+    def load_room(self, room_id: RoomIndex | None = None) -> None:
+        if not room_id: room_id = RoomIndex(self.current_room)
+
         match room_id:
             case RoomIndex.TOWN_ENTRANCE:
                 draw_town_entrance()
