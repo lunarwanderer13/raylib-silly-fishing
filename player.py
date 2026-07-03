@@ -1,11 +1,15 @@
 from pyray import *
+from debug import Debugger
 from items import ItemManager
 
 class Player:
     def __init__(self, data) -> None:
         self.data = data
 
-    inventory: ItemManager = ItemManager()
+        self.debugger: Debugger = Debugger(self.data["keybinds"]["toggle_debug_overlay"],
+                                      self.data["keybinds"]["toggle_command_line"])
+
+        self.inventory: ItemManager = ItemManager()
 
     position: Vector2 = Vector2(50, 50)
     movement: Vector2 = Vector2(0, 0)
@@ -59,3 +63,6 @@ class Player:
     def update(self) -> None:
         if self.can_move: self.move()
         self.draw()
+
+        self.debugger.debug_overlay(self)
+        self.debugger.command_line()
