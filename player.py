@@ -12,15 +12,10 @@ class Player:
     speed: float = 100
     sprint: float = 1.0
 
-    debug: bool = False
     can_cast: bool = False
     can_reel: bool = False
     can_move: bool = False
     can_interact: bool = False
-
-    def toggle_debug_mode(self) -> None:
-        if is_key_pressed(self.data["keybinds"]["toggle_debug_mode"]):
-            self.debug = not self.debug
 
     def move(self) -> None:
         delta: float = get_frame_time()
