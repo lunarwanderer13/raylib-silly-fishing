@@ -14,6 +14,7 @@ class Player:
     movement: Vector2 = Vector2(0, 0)
     speed: float = 100
     sprint: float = 1.0
+    size: Vector2 = Vector2(20, 30)
 
     can_cast: bool = True
     can_reel: bool = True
@@ -57,7 +58,7 @@ class Player:
         self.position.y += self.movement.y * self.speed * self.sprint * delta
 
     def draw(self) -> None:
-        draw_rectangle_v(self.position, Vector2(10, 10), BLUE)
+        draw_rectangle_v(self.position, self.size, BLUE)
 
     def update(self) -> None:
         self.draw()
