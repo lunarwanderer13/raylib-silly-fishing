@@ -1,23 +1,29 @@
 from pyray import *
+from config import GameConfig
 from debug import Debugger
-from items import ItemManager
+from items import ItemManager, Rod, get_rod, Bait, get_bait
 
 class Player:
     def __init__(self, data) -> None:
         self.data = data
-
         self.debugger: Debugger = Debugger(self)
-
         self.inventory: ItemManager = ItemManager()
 
-    position: Vector2 = Vector2(50, 50)
-    movement: Vector2 = Vector2(0, 0)
-    speed: float = 100
-    sprint: float = 1.0
-    size: Vector2 = Vector2(20, 30)
+        self.position: Vector2 = Vector2(self.data["player"]["position"]["x"], self.data["player"]["position"]["y"])
 
-    can_cast: bool = True
-    can_reel: bool = True
+        self.movement: Vector2 = Vector2(0, 0)
+        self.speed: float = 100
+        self.sprint: float = 1.0
+        self.size: Vector2 = Vector2(20, 30)
+        self.rect: Rectangle = Rectangle(self.position.x, self.position.y + self.size.y / 2, self.size.x, self.size.y / 2)
+
+        self.equipped_rod: Rod | None = get_rod(self.data["player"]["equipped_rod"])
+        self.equipped_bait: Bait | None = get_bait(self.data["player"]["equipped_bait"])
+
+    can_cast: bool = False
+    is_cast: bool = False
+    can_reel: bool = False
+    can_bait: bool = False
     can_move: bool = True
     can_interact: bool = True
 
@@ -59,6 +65,7 @@ class Player:
 
     def draw(self) -> None:
         draw_rectangle_v(self.position, self.size, BLUE)
+        draw_rectangle_rec(self.rect, YELLOW)
 
     def update(self) -> None:
         self.draw()
@@ -67,3 +74,8 @@ class Player:
         self.debugger.command_line()
 
         if self.can_move: self.move()
+
+        self.rect.x = self.position.x
+        self.rect.y = self.position.y + self.size.y / 2
+
+        self.can_cast = bool(any(check_collision_recs(self.rect, fishing_spot) for fishing_spot in GameConfig.fishing_spots.values()) and not self.can_reel and self.equipped_rod)
