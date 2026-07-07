@@ -277,6 +277,22 @@ item_index: list[Item] = [
          }),
 ]
 
+def get_rod(item_id: int) -> Rod | None:
+    if item_id < 0: return None
+
+    rod: Item = item_index[item_id]
+
+    if isinstance(rod, Rod): return rod
+    else: return None
+
+def get_bait(item_id: int) -> Bait | None:
+    if item_id < 0: return None
+
+    bait: Item = item_index[item_id]
+
+    if isinstance(bait, Bait): return bait
+    else: return None
+
 class ItemManager:
     items: list[Item] = []
 
