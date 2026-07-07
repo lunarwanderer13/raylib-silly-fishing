@@ -1,7 +1,6 @@
 import json
 from pathlib import Path
 from typing import Any
-
 from config import DefaultConfig
 
 class SaveManager:
@@ -17,6 +16,15 @@ class SaveManager:
 
     def save(self, data: dict[str, Any] | None = None) -> None:
         if not data: data: dict[str, Any] = {
+            "player": {
+                "position": {
+                    "x": 50,
+                    "y": 50,
+                },
+                "inventory": [],
+                "equipped_rod": -1,
+                "equipped_bait": -1,
+            },
             "keybinds": DefaultConfig.keybinds,
             "fps": DefaultConfig.fps,
             "fullscreen": DefaultConfig.fullscreen,
