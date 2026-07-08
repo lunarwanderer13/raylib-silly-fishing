@@ -1,10 +1,53 @@
 from pyray import *
+from rooms.rooms import RoomIndex, TravelSpot, FishingSpot
 
 class GameConfig:
     virtual_resolution: Vector2 = Vector2(320, 180)
 
-    fishing_spots: dict[str, Rectangle] = {
-        "lake": Rectangle(virtual_resolution.x / 2 + 5, virtual_resolution.y / 2 - virtual_resolution.y / 10 + 5, virtual_resolution.x * 1/3 - 10, virtual_resolution.y / 5 - 10),
+    travel_spots: dict[str, dict[RoomIndex, TravelSpot]] = {
+        RoomIndex.TOWN_ENTRANCE: {
+            RoomIndex.TOWN: TravelSpot(Rectangle(),
+                                       Vector2()),
+        },
+        RoomIndex.ROAD: {
+            RoomIndex.TOWN_ENTRANCE: TravelSpot(Rectangle(),
+                                                Vector2()),
+            RoomIndex.ROAD: TravelSpot(Rectangle(),
+                                       Vector2()),
+        },
+        RoomIndex.TOWN: {
+            RoomIndex.TOWN_ENTRANCE: TravelSpot(Rectangle(),
+                                                Vector2()),
+            RoomIndex.HOUSE: TravelSpot(Rectangle(),
+                                        Vector2()),
+            RoomIndex.FISHERMAN: TravelSpot(Rectangle(),
+                                            Vector2()),
+            RoomIndex.LAKE: TravelSpot(Rectangle(),
+                                       Vector2()),
+        },
+        RoomIndex.HOUSE: {
+            RoomIndex.TOWN: TravelSpot(Rectangle(),
+                                       Vector2()),
+        },
+        RoomIndex.FISHERMAN: {
+            RoomIndex.TOWN: TravelSpot(Rectangle(),
+                                       Vector2()),
+        },
+        RoomIndex.LAKE: {
+            RoomIndex.TOWN: TravelSpot(Rectangle(),
+                                       Vector2()),
+        },
+        RoomIndex.RIVER: {},
+        RoomIndex.SEA: {},
+    }
+
+    fishing_spots: dict[RoomIndex, FishingSpot] = {
+        RoomIndex.LAKE: FishingSpot(Rectangle(virtual_resolution.x * 2/3 + 5,
+                                              virtual_resolution.y / 2 - virtual_resolution.y / 10 + 5,
+                                              virtual_resolution.x * 1/6 - 10,
+                                              virtual_resolution.y / 5 - 10)),
+        RoomIndex.RIVER: FishingSpot(Rectangle()),
+        RoomIndex.SEA: FishingSpot(Rectangle()),
     }
 
 class DefaultConfig:
