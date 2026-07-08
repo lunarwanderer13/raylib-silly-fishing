@@ -1,14 +1,8 @@
 from pyray import *
 from config import GameConfig
+from timer import Timer
 from debug import Debugger
 from items import ItemManager, Rod, get_rod, Bait, get_bait
-
-class Timer:
-    def __init__(self, time: float) -> None:
-        self.time: float = time
-
-    def update(self) -> None:
-        self.time -= get_frame_time()
 
 class Player:
     def __init__(self, data) -> None:
