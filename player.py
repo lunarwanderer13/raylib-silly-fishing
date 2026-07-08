@@ -3,6 +3,13 @@ from config import GameConfig
 from debug import Debugger
 from items import ItemManager, Rod, get_rod, Bait, get_bait
 
+class Timer:
+    def __init__(self, time: float) -> None:
+        self.time: float = time
+
+    def update(self) -> None:
+        self.time -= get_frame_time()
+
 class Player:
     def __init__(self, data) -> None:
         self.data = data
@@ -23,12 +30,15 @@ class Player:
         self.equipped_rod: Rod | None = get_rod(self.data["player"]["equipped_rod"])
         self.equipped_bait: Bait | None = get_bait(self.data["player"]["equipped_bait"])
 
+    cast_timer: Timer = None
     can_cast: bool = False
+    is_casting: bool = False
     is_cast: bool = False
     can_reel: bool = False
     can_bait: bool = False
     can_move: bool = True
     can_interact: bool = True
+    can_open_inventory: bool = True
 
     def move(self) -> None:
         delta: float = get_frame_time()
@@ -80,4 +90,32 @@ class Player:
 
         if self.can_move: self.move()
 
-        self.can_cast = bool(any(check_collision_recs(self.rect, fishing_spot) for fishing_spot in GameConfig.fishing_spots.values()) and not self.can_reel and self.equipped_rod)
+        self.can_cast = bool(any(check_collision_recs(self.rect, fishing_spot.rect) for fishing_spot in GameConfig.fishing_spots.values()) and not self.is_cast and not self.can_reel and self.equipped_rod)
+
+        if self.can_cast and is_key_pressed(self.data["keybinds"]["cast_rod"]):
+            self.can_cast = False
+            self.is_casting = True
+            self.is_cast = False
+            self.can_move = False
+            self.can_interact = False
+            self.can_open_inventory = False
+            self.cast_timer = Timer(1.0)
+
+        if self.is_casting and self.equipped_rod:
+            self.cast_timer.update()
+
+            if self.cast_timer.time <= 0:
+                self.is_casting = False
+                self.is_cast = True
+                self.can_reel = True
+
+        if self.is_cast and self.equipped_rod:
+            self.equipped_rod.use()
+
+        if self.can_reel and is_key_pressed(self.data["keybinds"]["reel_rod"]):
+            self.can_reel = False
+            self.is_cast = False
+            self.can_reel = False
+            self.can_move = True
+            self.can_interact = True
+            self.can_open_inventory = True

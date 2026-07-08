@@ -57,8 +57,9 @@ class DefaultConfig:
         "walk_down": KeyboardKey.KEY_S,
         "walk_left": KeyboardKey.KEY_A,
         "sprint": KeyboardKey.KEY_LEFT_SHIFT,
-        "use_rod": KeyboardKey.KEY_SPACE,
-        "use_bait": KeyboardKey.KEY_LEFT_CONTROL,
+        "cast_rod": KeyboardKey.KEY_SPACE,
+        "reel_rod": KeyboardKey.KEY_R,
+        "use_bait": KeyboardKey.KEY_E,
         "toggle_debug_overlay": KeyboardKey.KEY_TAB,
         "toggle_command_line": KeyboardKey.KEY_GRAVE
     }

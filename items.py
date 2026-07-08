@@ -1,4 +1,4 @@
-from pyray import Color
+from pyray import *
 
 class ItemRarity:
     def __init__(self,
