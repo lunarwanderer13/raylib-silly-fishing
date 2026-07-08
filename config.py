@@ -1,5 +1,5 @@
 from pyray import *
-from rooms.rooms import RoomIndex, TravelSpot, FishingSpot
+from rooms.room_types import RoomIndex, TravelSpot, FishingSpot
 
 class GameConfig:
     virtual_resolution: Vector2 = Vector2(320, 180)
