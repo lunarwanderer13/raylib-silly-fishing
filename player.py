@@ -14,8 +14,11 @@ class Player:
         self.movement: Vector2 = Vector2(0, 0)
         self.speed: float = 100
         self.sprint: float = 1.0
-        self.size: Vector2 = Vector2(20, 30)
-        self.rect: Rectangle = Rectangle(self.position.x, self.position.y + self.size.y / 2, self.size.x, self.size.y / 2)
+        self.size: Vector2 = Vector2(15, 30)
+        self.rect: Rectangle = Rectangle(self.position.x - self.size.x / 2,
+                                         self.position.y - self.size.y / 2,
+                                         self.size.x,
+                                         self.size.y / 2)
 
         self.equipped_rod: Rod | None = get_rod(self.data["player"]["equipped_rod"])
         self.equipped_bait: Bait | None = get_bait(self.data["player"]["equipped_bait"])
@@ -62,9 +65,11 @@ class Player:
 
         self.position.x += self.movement.x * self.speed * self.sprint * delta
         self.position.y += self.movement.y * self.speed * self.sprint * delta
+        self.rect.x = self.position.x - self.size.x / 2
+        self.rect.y = self.position.y - self.size.y / 2
 
     def draw(self) -> None:
-        draw_rectangle_v(self.position, self.size, BLUE)
+        draw_rectangle_v(Vector2(self.position.x - self.size.x / 2, self.position.y - self.size.y), self.size, BLUE)
         draw_rectangle_rec(self.rect, YELLOW)
 
     def update(self) -> None:
@@ -74,8 +79,5 @@ class Player:
         self.debugger.command_line()
 
         if self.can_move: self.move()
-
-        self.rect.x = self.position.x
-        self.rect.y = self.position.y + self.size.y / 2
 
         self.can_cast = bool(any(check_collision_recs(self.rect, fishing_spot) for fishing_spot in GameConfig.fishing_spots.values()) and not self.can_reel and self.equipped_rod)
