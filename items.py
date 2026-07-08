@@ -278,16 +278,15 @@ item_index: list[Item] = [
 ]
 
 def get_rod(item_id: int) -> Rod | None:
-    if item_id < 0: return None
-
+    if item_id not in range(1, 9): return None
     rod: Item = item_index[item_id]
 
     if isinstance(rod, Rod): return rod
     else: return None
 
 def get_bait(item_id: int) -> Bait | None:
-    if item_id < 0: return None
-
+    item_id += 8
+    if item_id not in range(9, 17): return None
     bait: Item = item_index[item_id]
 
     if isinstance(bait, Bait): return bait
