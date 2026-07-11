@@ -1,4 +1,5 @@
 from pyray import *
+from random import randint, uniform as randfloat
 from config import GameConfig
 from timer import Timer
 from debug import Debugger
@@ -24,15 +25,21 @@ class Player:
         self.equipped_rod: Rod | None = get_rod(self.data["player"]["equipped_rod"])
         self.equipped_bait: Bait | None = get_bait(self.data["player"]["equipped_bait"])
 
-    cast_timer: Timer = None
-    can_cast: bool = False
-    is_casting: bool = False
-    is_cast: bool = False
-    can_reel: bool = False
-    can_bait: bool = False
-    can_move: bool = True
-    can_interact: bool = True
-    can_open_inventory: bool = True
+        self.cast_timer: Timer | None = None
+        self.can_cast: bool = False
+        self.is_casting: bool = False
+        self.is_cast: bool = False
+        self.can_reel: bool = False
+        self.can_bait: bool = False
+        self.can_move: bool = True
+        self.can_interact: bool = True
+        self.can_open_inventory: bool = True
+
+        self.bite_timer: Timer | None = None
+        self.fish_bit: bool = False
+        self.min_bite_time: float = 2.0
+        self.max_bite_time: float = 3.0
+        self.bite_chance: int = 10
 
     def move(self) -> None:
         delta: float = get_frame_time()
@@ -86,7 +93,7 @@ class Player:
 
         self.can_cast = bool(any(check_collision_recs(self.rect, fishing_spot.rect) for fishing_spot in GameConfig.fishing_spots.values()) and not self.is_cast and not self.can_reel and self.equipped_rod)
 
-        if self.can_cast and is_key_pressed(self.data["keybinds"]["cast_rod"]):
+        if self.can_cast and self.equipped_rod and is_key_pressed(self.data["keybinds"]["cast_rod"]):
             self.can_cast = False
             self.is_casting = True
             self.is_cast = False
@@ -95,7 +102,13 @@ class Player:
             self.can_open_inventory = False
             self.cast_timer = Timer(1.0)
 
-        if self.is_casting and self.equipped_rod:
+            self.fish_bit = False
+            self.min_bite_time: float = 2.0 - self.equipped_rod.item_id / 10
+            self.max_bite_time: float = 3.0 - self.equipped_rod.item_id / 10
+            self.bite_chance: int = self.equipped_rod.item_id * 10
+            self.bite_timer = Timer(randfloat(self.min_bite_time, self.max_bite_time))
+
+        if self.is_casting and self.equipped_rod and self.cast_timer:
             self.cast_timer.update()
 
             if self.cast_timer.time <= 0:
@@ -103,8 +116,18 @@ class Player:
                 self.is_cast = True
                 self.can_reel = True
 
-        if self.is_cast and self.equipped_rod:
-            self.equipped_rod.use()
+        if self.is_cast and self.equipped_rod and self.bite_timer:
+            if not self.fish_bit: self.bite_timer.update()
+
+            if self.bite_timer.time <= 0:
+                if randint(0, 99) < self.bite_chance:
+                    self.fish_bit = True
+                else:
+                    self.bite_timer = Timer(randfloat(self.min_bite_time, self.max_bite_time))
+                    print("Bob...")
+
+            if self.fish_bit:
+                print("Bite!")
 
         if self.can_reel and is_key_pressed(self.data["keybinds"]["reel_rod"]):
             self.can_reel = False
@@ -113,3 +136,4 @@ class Player:
             self.can_move = True
             self.can_interact = True
             self.can_open_inventory = True
+            self.fish_bit = False
