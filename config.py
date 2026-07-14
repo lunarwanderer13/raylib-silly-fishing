@@ -42,10 +42,10 @@ class GameConfig:
     }
 
     fishing_spots: dict[RoomIndex, FishingSpot] = {
-        RoomIndex.LAKE: FishingSpot(Rectangle(virtual_resolution.x * 2/3 + 5,
-                                              virtual_resolution.y / 2 - virtual_resolution.y / 10 + 5,
-                                              virtual_resolution.x * 1/6 - 10,
-                                              virtual_resolution.y / 5 - 10)),
+        RoomIndex.LAKE: FishingSpot(Rectangle(virtual_resolution.x * 3/4,
+                                              virtual_resolution.y / 2 - virtual_resolution.y / 10,
+                                              virtual_resolution.x * 1/12,
+                                              virtual_resolution.y / 5)),
         RoomIndex.RIVER: FishingSpot(Rectangle()),
         RoomIndex.SEA: FishingSpot(Rectangle()),
     }

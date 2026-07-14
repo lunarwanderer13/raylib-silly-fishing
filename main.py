@@ -7,16 +7,16 @@ from data import SaveManager
 from rooms.rooms import RoomManager, RoomIndex
 
 def main() -> None:
-    save_manager: SaveManager = SaveManager("data.json")
-    data: dict[str, Any] = save_manager.load()
-    player: Player = Player(data)
-
     # The virtual resolution
     virtual_width: int = int(GameConfig.virtual_resolution.x)
     virtual_height: int = int(GameConfig.virtual_resolution.y)
 
     init_window(virtual_width * 3, virtual_height * 3, "Silly Fishing")
     set_window_state(ConfigFlags.FLAG_WINDOW_RESIZABLE)
+
+    save_manager: SaveManager = SaveManager("data.json")
+    data: dict[str, Any] = save_manager.load()
+    player: Player = Player(data)
 
     room_manager: RoomManager = RoomManager(RoomIndex(data["room_id"]))
 

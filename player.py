@@ -3,24 +3,34 @@ from random import randint, uniform as randfloat
 from config import GameConfig
 from timer import Timer
 from debug import Debugger
+from animation import AnimationManager, Animation
 from items import ItemManager, Rod, get_rod, Bait, get_bait
 
 class Player:
     def __init__(self, data) -> None:
         self.data = data
         self.debugger: Debugger = Debugger(self)
+
+        self.animations: AnimationManager = AnimationManager(Vector2(16, 16))
+        self.sprite_sheet: Texture = load_texture("assets/sprites/player/player.png")
+        self.animations.add("idle", Animation(0, 2, 2))
+        self.animations.add("walk", Animation(1, 4, 4))
+        self.animations.add("run", Animation(2, 4, 4))
+        self.animations.add("sit", Animation(3, 2, 2, False))
+
         self.inventory: ItemManager = ItemManager()
 
         self.position: Vector2 = Vector2(self.data["player"]["position"]["x"], self.data["player"]["position"]["y"])
 
         self.movement: Vector2 = Vector2(0, 0)
-        self.speed: float = 100
+        self.speed: float = 75
         self.sprint: float = 1.0
-        self.size: Vector2 = Vector2(15, 30)
+        self.flipped: bool = False
+        self.size: Vector2 = Vector2(10, 16)
         self.rect: Rectangle = Rectangle(self.position.x - self.size.x / 2,
-                                         self.position.y - self.size.y / 2,
+                                         self.position.y - 1,
                                          self.size.x,
-                                         self.size.y / 2)
+                                         1)
 
         self.equipped_rod: Rod | None = get_rod(self.data["player"]["equipped_rod"])
         self.equipped_bait: Bait | None = get_bait(self.data["player"]["equipped_bait"])
@@ -77,10 +87,21 @@ class Player:
         self.position.x += self.movement.x * self.speed * self.sprint * delta
         self.position.y += self.movement.y * self.speed * self.sprint * delta
         self.rect.x = self.position.x - self.size.x / 2
-        self.rect.y = self.position.y - self.size.y / 2
+        self.rect.y = self.position.y - 1
 
     def draw(self) -> None:
-        draw_rectangle_v(Vector2(self.position.x - self.size.x / 2, self.position.y - self.size.y), self.size, BLUE)
+        source: Rectangle = self.animations.source()
+
+        if self.flipped:
+            source.x += source.width
+            source.width *= -1
+
+        draw_texture_rec(self.sprite_sheet,
+                         source,
+                         Vector2(self.position.x - self.animations.frame_size.x / 2, self.position.y - self.size.y),
+                         WHITE)
+
+        #draw_rectangle_v(Vector2(self.position.x - self.size.x / 2, self.position.y - self.size.y), self.size, BLUE)
         draw_rectangle_rec(self.rect, YELLOW)
 
     def update(self) -> None:
@@ -88,6 +109,14 @@ class Player:
 
         self.debugger.debug_overlay()
         self.debugger.command_line()
+
+        self.flipped: bool = self.movement.x < 0
+
+        if self.movement.x != 0 or self.movement.y != 0:
+            if self.sprint < 1.25: self.animations.play("walk")
+            else: self.animations.play("run")
+        else:
+            self.animations.play("idle")
 
         if self.can_move: self.move()
 
@@ -137,3 +166,5 @@ class Player:
             self.can_interact = True
             self.can_open_inventory = True
             self.fish_bit = False
+
+        self.animations.update()
