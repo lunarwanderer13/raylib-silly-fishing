@@ -1,5 +1,11 @@
 from pyray import Rectangle, Vector2
+from typing import Callable
 from enum import Enum
+
+class Room:
+    def __init__(self, size: Vector2, draw: Callable[[], None]) -> None:
+        self.size: Vector2 = size
+        self.draw: Callable[[], None] = draw
 
 class RoomIndex(Enum):
     TOWN_ENTRANCE = 0

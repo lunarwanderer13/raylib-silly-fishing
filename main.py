@@ -5,6 +5,7 @@ from player import Player
 from debug import Debugger
 from config import GameConfig
 from data import SaveManager
+from rooms.room_types import Room
 from rooms.rooms import RoomManager, RoomIndex
 
 def main() -> None:
@@ -55,14 +56,23 @@ def main() -> None:
         # Background color
         clear_background(RAYWHITE)
 
+        room: Room = room_manager.select_room(RoomIndex(data["room_id"]))
+
         player.update()
+
         debugger.toggle_debug_overlay()
         debugger.toggle_command_line()
-        camera.target = player.position
+
+        camera.target = Vector2(clamp(player.position.x,
+                                      virtual_width / 2,
+                                      room.size.x - virtual_width / 2),
+                                clamp(player.position.y,
+                                      virtual_height / 2,
+                                      room.size.y - virtual_height / 2))
 
         begin_mode_2d(camera)
 
-        room_manager.load_room(RoomIndex(data["room_id"]))
+        room.draw()
 
         player.draw()
 

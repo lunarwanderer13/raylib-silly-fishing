@@ -13,7 +13,7 @@ class Player:
         self.sprite_sheet: Texture = load_texture("assets/sprites/player/player.png")
         self.animations.add("idle", Animation(0, 2, 2))
         self.animations.add("walk", Animation(1, 4, 4))
-        self.animations.add("run", Animation(2, 4, 4))
+        self.animations.add("run", Animation(2, 4, 8))
         self.animations.add("sit", Animation(3, 2, 2, False))
 
         self.inventory: ItemManager = ItemManager()
