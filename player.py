@@ -29,6 +29,10 @@ class Player:
                                          self.position.y - 1,
                                          self.size.x,
                                          1)
+        self.collision_rect: Rectangle = Rectangle(self.position.x - self.size.x / 2,
+                                                   self.position.y - self.size.y,
+                                                   self.size.x,
+                                                   self.size.y)
 
         self.equipped_rod: Rod | None = get_rod(self.data["player"]["equipped_rod"])
         self.equipped_bait: Bait | None = get_bait(self.data["player"]["equipped_bait"])
@@ -39,7 +43,7 @@ class Player:
         self.is_cast: bool = False
         self.can_reel: bool = False
         self.can_bait: bool = False
-        self.can_move: bool = True
+        self.is_colliding: bool = False
         self.can_interact: bool = True
         self.can_open_inventory: bool = True
 
@@ -48,6 +52,13 @@ class Player:
         self.min_bite_time: float = 2.0
         self.max_bite_time: float = 3.0
         self.bite_chance: int = 10
+
+    def can_move(self) -> bool:
+        return (
+            not self.is_casting
+            and not self.is_cast
+            and not self.is_colliding
+        )
 
     def move(self) -> None:
         if is_key_down(self.data["keybinds"]["walk_up"]):
@@ -97,7 +108,6 @@ class Player:
                          Vector2(self.position.x - self.animations.frame_size.x / 2, self.position.y - self.size.y),
                          WHITE)
 
-        #draw_rectangle_v(Vector2(self.position.x - self.size.x / 2, self.position.y - self.size.y), self.size, BLUE)
         draw_rectangle_rec(self.rect, YELLOW)
 
     def update(self) -> None:
@@ -109,7 +119,7 @@ class Player:
         else:
             self.animations.play("idle")
 
-        if self.can_move: self.move()
+        if self.can_move(): self.move()
 
         self.can_cast = bool(any(check_collision_recs(self.rect, fishing_spot.rect) for fishing_spot in GameConfig.fishing_spots.values()) and not self.is_cast and not self.can_reel and self.equipped_rod)
 
@@ -117,7 +127,6 @@ class Player:
             self.can_cast = False
             self.is_casting = True
             self.is_cast = False
-            self.can_move = False
             self.can_interact = False
             self.can_open_inventory = False
             self.cast_timer = Timer(1.0)
@@ -153,7 +162,6 @@ class Player:
             self.can_reel = False
             self.is_cast = False
             self.can_reel = False
-            self.can_move = True
             self.can_interact = True
             self.can_open_inventory = True
             self.fish_bit = False
