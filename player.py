@@ -2,14 +2,12 @@ from pyray import *
 from random import randint, uniform as randfloat
 from config import GameConfig
 from timer import Timer
-from debug import Debugger
 from animation import AnimationManager, Animation
 from items import ItemManager, Rod, get_rod, Bait, get_bait
 
 class Player:
     def __init__(self, data) -> None:
         self.data = data
-        self.debugger: Debugger = Debugger(self)
 
         self.animations: AnimationManager = AnimationManager(Vector2(16, 16))
         self.sprite_sheet: Texture = load_texture("assets/sprites/player/player.png")
@@ -52,8 +50,6 @@ class Player:
         self.bite_chance: int = 10
 
     def move(self) -> None:
-        delta: float = get_frame_time()
-
         if is_key_down(self.data["keybinds"]["walk_up"]):
             self.movement.y = -1
         if is_key_down(self.data["keybinds"]["walk_right"]):
@@ -84,8 +80,8 @@ class Player:
         else:
             self.sprint = 1.0
 
-        self.position.x += self.movement.x * self.speed * self.sprint * delta
-        self.position.y += self.movement.y * self.speed * self.sprint * delta
+        self.position.x += round(self.movement.x * self.speed * self.sprint * get_frame_time())
+        self.position.y += round(self.movement.y * self.speed * self.sprint * get_frame_time())
         self.rect.x = self.position.x - self.size.x / 2
         self.rect.y = self.position.y - 1
 
@@ -105,11 +101,6 @@ class Player:
         draw_rectangle_rec(self.rect, YELLOW)
 
     def update(self) -> None:
-        self.draw()
-
-        self.debugger.debug_overlay()
-        self.debugger.command_line()
-
         self.flipped: bool = self.movement.x < 0
 
         if self.movement.x != 0 or self.movement.y != 0:

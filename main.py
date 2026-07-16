@@ -2,6 +2,7 @@ from pyray import *
 from typing import Any
 
 from player import Player
+from debug import Debugger
 from config import GameConfig
 from data import SaveManager
 from rooms.rooms import RoomManager, RoomIndex
@@ -17,6 +18,11 @@ def main() -> None:
     save_manager: SaveManager = SaveManager("data.json")
     data: dict[str, Any] = save_manager.load()
     player: Player = Player(data)
+    debugger: Debugger = Debugger(player)
+    camera: Camera2D = Camera2D(Vector2(virtual_width / 2, virtual_height / 2),
+                                player.position,
+                                0.0,
+                                1.0)
 
     room_manager: RoomManager = RoomManager(RoomIndex(data["room_id"]))
 
@@ -49,9 +55,21 @@ def main() -> None:
         # Background color
         clear_background(RAYWHITE)
 
+        player.update()
+        debugger.toggle_debug_overlay()
+        debugger.toggle_command_line()
+        camera.target = player.position
+
+        begin_mode_2d(camera)
+
         room_manager.load_room(RoomIndex(data["room_id"]))
 
-        player.update()
+        player.draw()
+
+        end_mode_2d()
+
+        if debugger.is_debug_overlay_open: debugger.draw_debug_overlay()
+        if debugger.is_command_line_open: debugger.draw_command_line()
 
         end_texture_mode()
 
