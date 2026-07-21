@@ -93,8 +93,20 @@ class Player:
 
         self.position.x += round(self.movement.x * self.speed * self.sprint * get_frame_time())
         self.position.y += round(self.movement.y * self.speed * self.sprint * get_frame_time())
+
+    def clamp(self, room_size: Vector2) -> None:
+        self.position.x = clamp(self.position.x,
+                                self.collision_rect.width / 2,
+                                room_size.x - self.collision_rect.width / 2)
+        self.position.y = clamp(self.position.y,
+                                self.collision_rect.height,
+                                room_size.y)
+
         self.rect.x = self.position.x - self.size.x / 2
         self.rect.y = self.position.y - 1
+
+        self.collision_rect.x = self.position.x - self.size.x / 2
+        self.collision_rect.y = self.position.y - self.size.y
 
     def draw(self) -> None:
         source: Rectangle = self.animations.source()
@@ -105,10 +117,8 @@ class Player:
 
         draw_texture_rec(self.sprite_sheet,
                          source,
-                         Vector2(self.position.x - self.animations.frame_size.x / 2, self.position.y - self.size.y),
+                         Vector2(self.position.x - self.animations.frame_size.x / 2, self.position.y - self.animations.frame_size.y),
                          WHITE)
-
-        draw_rectangle_rec(self.rect, YELLOW)
 
     def update(self) -> None:
         self.flipped: bool = self.movement.x < 0

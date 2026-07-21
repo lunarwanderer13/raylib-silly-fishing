@@ -59,12 +59,7 @@ def main() -> None:
         room: Room = room_manager.select_room(RoomIndex(data["room_id"]))
 
         player.update()
-        player.position = Vector2(clamp(player.position.x,
-                                        player.rect.width / 2,
-                                        room.size.x - player.collision_rect.width / 2),
-                                  clamp(player.position.y,
-                                        player.collision_rect.height,
-                                        room.size.y))
+        player.clamp(room.size)
 
         debugger.toggle_debug_overlay()
         debugger.toggle_command_line()
@@ -81,6 +76,10 @@ def main() -> None:
         room.draw()
 
         player.draw()
+
+        if debugger.is_debug_overlay_open:
+            draw_rectangle_lines_ex(player.collision_rect, 1, BLUE)
+            draw_rectangle_lines_ex(player.rect, 1, YELLOW)
 
         end_mode_2d()
 
